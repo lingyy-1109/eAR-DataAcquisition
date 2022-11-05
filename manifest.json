@@ -1,0 +1,25 @@
+{
+   "name":"HTML5-BLE-eAR",
+   "bluetooth": {
+	   "uuids": [ "180D", "1809", "180F" ],
+	   "socket": true,
+	   "low_energy": true
+   },
+   "version":"2.4",
+   "manifest_version":2,
+   "description":"Bluetooth, BlueZ, eAR2016 sensor",
+   "browser_action":{
+      "default_title":"BLE test",
+      "default_popup":"index.html"
+   },
+   "content_scripts":[{
+      "matches":["http://127.0.0.1/*"],
+      "js":[
+         "font.js",
+         "linegraph.js",
+         "canvasdrawing.js",
+	 "savecsv.js"
+      ]
+   }],
+   "content_security_policy": "script-src 'self'; object-src 'self';"
+}
