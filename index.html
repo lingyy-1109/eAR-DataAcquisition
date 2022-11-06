@@ -24,10 +24,9 @@ Please enable Java script on your browser. </br>
     <script src="font.js" type="text/javascript"> </script>
     <script src="savecsv.js" type="text/javascript"> </script>
 
- <script type="text/javascript" >
+<script type="text/javascript" >
    
-  function init()
-  {
+function init() {
     if (isWebBluetoothEnabled())
     {
         console.log("BLE is enabled!");        
@@ -36,9 +35,9 @@ Please enable Java script on your browser. </br>
         console.log("BLE is not enabled in this web browser!")
 
     }
-  }
+}
 
-  function isWebBluetoothEnabled() {
+function isWebBluetoothEnabled() {
     if (navigator.bluetooth) {
       return true;
     } else {
@@ -172,49 +171,49 @@ function Appendzero(obj)
 function onDiscoverService() {//start searching for BLE devices
   //var getdeviceinfo=document.getElementById("deviceinfo");
   //getdeviceinfo.hidden=true;
-  var discoverservice=document.getElementById("discover");//hide the button
-  discoverservice.hidden=true;
+    var discoverservice=document.getElementById("discover");//hide the button
+    discoverservice.hidden=true;
 
   // Validate services UUID entered by user first.
   /*let optionalServices = document.querySelector('#optionalServices').value
     .split(/, ?/).map(s => s.startsWith('0x') ? parseInt(s) : s)
     .filter(s => s && BluetoothUUID.getService);*/
-let optionalServices=['47442014-0f63-5b27-9122-728099603712'];//BSN IoT (note UUID lower case)
-  console.log('Requesting any Bluetooth Device...');
-  navigator.bluetooth.requestDevice({
-      acceptAllDevices: true,
-      optionalServices: optionalServices//BSN IoT
-  })
-  .then(device => {
-    console.log('Connecting to GATT Server...');
-    return device.gatt.connect();
-  })
-  .then(server => {
+    let optionalServices=['47442014-0f63-5b27-9122-728099603712'];//BSN IoT (note UUID lower case)
+    console.log('Requesting any Bluetooth Device...');
+    navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: optionalServices//BSN IoT
+    })
+    .then(device => {
+        console.log('Connecting to GATT Server...');
+        return device.gatt.connect();
+    })
+    .then(server => {
     // Note that we could also get all services that match a specific UUID by
     // passing it to getPrimaryServices().
-    console.log('Getting Services...');
-    return server.getPrimaryServices();    
-  })
-  .then(services => {
-    console.log('Getting Characteristics...');
-    let queue = Promise.resolve();
-    services.forEach(service => {
-      queue = queue.then(_ => service.getCharacteristics().then(characteristics => {
-        if (service.uuid==['47442014-0f63-5b27-9122-728099603712'])//looking for e-AR sensor
-        {
-            console.log("> Service: BSN IoT");//got it
-            var canvastable=document.getElementById("canvastable");
-            canvastable.hidden=false;    
-            savetable.hidden=false;
-             var instructables=document.getElementById("instructions");
-            instructables.hidden=true;        
-            draw();
-        }
-        else if (service.uuid==['0000180a-0000-1000-8000-00805f9b34fb'])//this is device information
-        {
-            console.log("> Service: Device Info");
-        }
-        else console.log('> Service: ' + service.uuid);//other services
+        console.log('Getting Services...');
+        return server.getPrimaryServices();
+    })
+    .then(services => {
+        console.log('Getting Characteristics...');
+        let queue = Promise.resolve();
+        services.forEach(service => {
+        queue = queue.then(_ => service.getCharacteristics().then(characteristics => {
+            if (service.uuid==['47442014-0f63-5b27-9122-728099603712'])//looking for e-AR sensor
+            {
+                console.log("> Service: BSN IoT");//got it
+                var canvastable=document.getElementById("canvastable");
+                canvastable.hidden=false;
+                savetable.hidden=false;
+                var instructables=document.getElementById("instructions");
+                instructables.hidden=true;
+                draw();
+            }
+            else if (service.uuid==['0000180a-0000-1000-8000-00805f9b34fb'])//this is device information
+            {
+                console.log("> Service: Device Info");
+            }
+            else console.log('> Service: ' + service.uuid);//other services
         //scan for all characteristics of the service
         characteristics.forEach(characteristic => {
             if (characteristic.uuid==['47442015-0f63-5b27-9122-728099603712'])
@@ -298,14 +297,14 @@ let optionalServices=['47442014-0f63-5b27-9122-728099603712'];//BSN IoT (note UU
             {//console.log(">> Characteristic: Manufacturer");
             }
             else  
-          console.log('>> Characteristic: ' + characteristic.uuid + ' ' +
+            console.log('>> Characteristic: ' + characteristic.uuid + ' ' +
               getSupportedProperties(characteristic));//other characteristics
         });
       }));
     });
     return queue;
   })
-  .catch(error => {
+    .catch(error => {
     console.log('Argh! ' + error);
   });
 }
@@ -324,24 +323,31 @@ function getSupportedProperties(characteristic) {//find the details of a charact
 </script>
 </head>
 <body onload="init();"  style="font-family:Arial">
- <h1>BLE Example - e-AR Sensor</h1>   
+ <h1>BLE Example - e-AR Sensor 数据采集系统</h1>
+
+
  <div id="instructions">
- This is a simple example program of using the BLE functions of HTML to connect to the e-AR sensor. <br/>
- Please note that it will only work with Google Chrome in devices with Bluetooth 4.0 or above.<br/>
- You also need to make sure that the "Experimental Web Platform features" flag is enabled. (in chrome://flags)<br/>
- To start:
- <ul>  
-  <li>Touch the back of the e-AR sensor to start the sensor (i.e. the transparent section of the sensor with the copper plate underneath) [You should see the blue LED lit up when it starts])</li>
-  <li>Click 'Discover BLE devices' to find the e-AR sensor nearby</li>
-  <li>You should then see the "e-AR2016" listed as one of the devices. Selec the 'e-AR216' device then click on 'Pair'</li>
-  <li>The program will then establish the connection with the e-AR sensor. Once it is connected, the signals will be plotted on the screen</li>
-  <li>Should you have issue connecting, please first check the Google Chrome console for error messages (More Tools->Deverloper Tools->Console)</li>
-  <li> (skaegy) After start collecting data, the captured data can be saved as a '*.csv' file. </li>
-</ul>
-  Source code can be found via: <a href="https://github.com/bennyplo/HTML5-BLE-eAR">https://github.com/bennyplo/HTML5-BLE-eAR</a><br/><hr/>
+ 本设备通过HTML的BLE模块连接e-AR传感器来进行数据采集 <br/>
+ <h2>工作环境</h2>
+     <ul>
+         <li>本页面<strong>仅能在Chrome浏览器中正常运行</strong>，且需要设备支持<strong>蓝牙版本为4.0以上</strong>.</li>
+         <li>需要在 chrome://flags 中<strong>开启 Experimental Web Platform features</strong></li>
+     </ul>
+
+<h2>数据采集流程</h2>
+     <ul>
+         <li>轻按e-AR传感器的背面（透明部位内侧贴有铜片的位置）开启传感器，此时按压部位附近应亮蓝光</li>
+         <li>点击<strong>【开启蓝牙连接】</strong>按钮来寻找附近的e-AR传感器。开启后，在设备列表中找到名为【e-AR2016】的设备，选中并点击【配对】。</li>
+         <li>本程序会与e-AR传感器建立蓝牙连接。一旦连接成功，信号将会被实时展示在屏幕上</li>
+         <li>如果你遇到连接问题，请尝试刷新页面，或按【F12】打开Chrome开发者工具获取更多信息</li>
+         <li>若遇到不能解决的问题，请微信联系13346356328获取更多帮助</li>
+         <li> (skaegy) After start collecting data, the captured data can be saved as a '*.csv' file. </li>
+ </ul>
 </div>
+
+
 <!--<input type="button" id="deviceinfo" value="Get Device Information" onclick="onButtonClick();"/>-->
-<input type="button" id="discover" value="Discover BLE devices" onclick="onDiscoverService();"/><br/>
+<input type="button" id="discover" value="开启蓝牙连接" onclick="onDiscoverService();"/><br/>
 
 <table id="savetable" hidden="1">
   <tr><td>Name of subject</td><td> <input type="text" id="inputname" value="Your name" onfocus="if(value=='Your name') {value=''}" onblur="if (value=='') {value='Your name'}"/ ></td></tr>

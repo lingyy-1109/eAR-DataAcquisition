@@ -388,7 +388,7 @@ function draw4()
         LineGraph_ShowHideLegend(pindex1,true);
         LineGraph_SetVariableColor(pindex1,0,'#ffbb22');
         LineGraph_SetLineWidth(pindex1,2);      
-        LineGraph_SetChartColor(pindex1,'#222222','#888800',50);    
+        LineGraph_SetChartColor(pindex1,'#222222','#888800',50);
         
         var pindex2=LineGraph_AddNewGraph( context1,no_var,win_left,win_top,win_right,win_bottom);        
         LineGraph_SetLegendAttribute(pindex2,win_left+5,win_top+20,10,10,10);
