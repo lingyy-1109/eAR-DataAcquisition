@@ -14,6 +14,7 @@
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 
+<link rel="stylesheet" type="text/css" href="systemStyle.css">
 <!--<script src="http://www.java.com/js/deployJava.js"></script>-->
 <noscript> 
 Please enable Java script on your browser. </br>
@@ -148,18 +149,19 @@ function onSave(){
   document.getElementById("btnSave").disabled = true;
   savecnt = savecnt + 1;
   console.log('saving file...');
-  
+  document.getElementById("canvasDiv").style.backgroundColor = '#03c8a8'
 }
 function onStop(){
   saveflag = 0;
- document.getElementById("btnStop").disabled = true;
+  document.getElementById("btnStop").disabled = true;
   document.getElementById("btnSave").disabled = false;
   rowcnt = 0;
   nowTime = new Date();
   //dateInt = nowTime.getTime();
-  filename = inputname.value + '_' + inputaction.value + '_' + nowTime.getFullYear() + Appendzero(nowTime.getMonth()+1) + Appendzero(nowTime.getDate()) + nowTime.getHours() + nowTime.getMinutes() + nowTime.getSeconds()+'.csv';
+  filename = inputage.value + '_' + inputsex.value + '_' + inputheight.value + '_' + inputweight.value + '_' +nowTime.getFullYear() + Appendzero(nowTime.getMonth()+1) + Appendzero(nowTime.getDate()) + nowTime.getHours() + nowTime.getMinutes() + nowTime.getSeconds()+'.csv';
   exportToCsv(filename, csvdata);
-  console.log('File is saved...')
+  console.log('File is saved...');
+  document.getElementById("canvasDiv").style.backgroundColor = '#fff'
 }
 function Appendzero(obj)
 {
@@ -169,15 +171,11 @@ function Appendzero(obj)
 
 /////////////////////////////////////////////
 function onDiscoverService() {//start searching for BLE devices
-  //var getdeviceinfo=document.getElementById("deviceinfo");
-  //getdeviceinfo.hidden=true;
+
     var discoverservice=document.getElementById("discover");//hide the button
     discoverservice.hidden=true;
 
   // Validate services UUID entered by user first.
-  /*let optionalServices = document.querySelector('#optionalServices').value
-    .split(/, ?/).map(s => s.startsWith('0x') ? parseInt(s) : s)
-    .filter(s => s && BluetoothUUID.getService);*/
     let optionalServices=['47442014-0f63-5b27-9122-728099603712'];//BSN IoT (note UUID lower case)
     console.log('Requesting any Bluetooth Device...');
     navigator.bluetooth.requestDevice({
@@ -202,11 +200,13 @@ function onDiscoverService() {//start searching for BLE devices
             if (service.uuid==['47442014-0f63-5b27-9122-728099603712'])//looking for e-AR sensor
             {
                 console.log("> Service: BSN IoT");//got it
-                var canvastable=document.getElementById("canvastable");
+                var canvastable=document.getElementById("canvasDiv");
                 canvastable.hidden=false;
-                savetable.hidden=false;
-                var instructables=document.getElementById("instructions");
-                instructables.hidden=true;
+                saveDataDiv.hidden=false;
+                var instructables=document.getElementsByClassName("instructions");
+                instructables[0].hidden=true;
+                instructables[1].hidden=true;
+
                 draw();
             }
             else if (service.uuid==['0000180a-0000-1000-8000-00805f9b34fb'])//this is device information
@@ -324,16 +324,17 @@ function getSupportedProperties(characteristic) {//find the details of a charact
 </head>
 <body onload="init();"  style="font-family:Arial">
  <h1>BLE Example - e-AR Sensor 数据采集系统</h1>
-
-
- <div id="instructions">
  本设备通过HTML的BLE模块连接e-AR传感器来进行数据采集 <br/>
+
+ <div class="instructions">
+
  <h2>工作环境</h2>
      <ul>
          <li>本页面<strong>仅能在Chrome浏览器中正常运行</strong>，且需要设备支持<strong>蓝牙版本为4.0以上</strong>.</li>
          <li>需要在 chrome://flags 中<strong>开启 Experimental Web Platform features</strong></li>
      </ul>
-
+</div>
+<div class="instructions">
 <h2>数据采集流程</h2>
      <ul>
          <li>轻按e-AR传感器的背面（透明部位内侧贴有铜片的位置）开启传感器，此时按压部位附近应亮蓝光</li>
@@ -345,22 +346,73 @@ function getSupportedProperties(characteristic) {//find the details of a charact
  </ul>
 </div>
 
+<div id="discoverDiv">
+    <input type="button" id="discover" value="开启蓝牙连接" onclick="onDiscoverService();"/><br/>
 
+</div>
 <!--<input type="button" id="deviceinfo" value="Get Device Information" onclick="onButtonClick();"/>-->
-<input type="button" id="discover" value="开启蓝牙连接" onclick="onDiscoverService();"/><br/>
+<!--<button id="discover" value="开启蓝牙连接" onclick="onDiscoverService()"></button><br>-->
 
-<table id="savetable" hidden="1">
-  <tr><td>Name of subject</td><td> <input type="text" id="inputname" value="Your name" onfocus="if(value=='Your name') {value=''}" onblur="if (value=='') {value='Your name'}"/ ></td></tr>
-  <tr><td>Actions</td><td><input type="text" id="inputaction" value="Actions" onfocus="if(value=='Actions') {value=''}" onblur="if (value=='') {value='Actions'}"/></td></tr>
-  <tr><td><input type="button" id=btnSave value="save data" onclick="onSave();"/ ></td>
-      <td><input type="button" id=btnStop disabled value="stop save" onclick="onStop();"/ ></td><tr/>
-  </table>
+ <div id="saveDataDiv" hidden="1">
+     <table id="savetable" >
+         <tr>
+             <h2>基本信息录入【请在完成信息录入后开始记录数据】</h2>
+         </tr>
+         <tr>
+             <td>患者年龄</td>
+             <td>
+                 <input type="text" id="inputage" value='xx' onfocus="if(value=='xx') {value=''}" onblur="if (value=='') {value='xx'}"/>
+             </td>
+         </tr>
+         <tr>
+             <td>患者性别</td>
+             <td>
+                 <input type="text" id="inputsex" value='x' onfocus="if(value=='x') {value=''}" onblur="if (value=='') {value='x'}"/>
+             </td>
+         </tr>
+         <tr>
+             <td>患者身高</td>
+             <td>
+                 <input type="text" id="inputheight" value='xxx' onfocus="if(value=='xxx') {value=''}" onblur="if (value=='') {value='xxx'}"/>
+             </td>
+         </tr>
+         <tr>
+             <td>患者体重</td>
+             <td>
+                 <input type="text" id="inputweight" value='xxx' onfocus="if(value=='xxx') {value=''}" onblur="if (value=='') {value='xxx'}"/>
+             </td>
+         </tr>
 
-<table id="canvastable" hidden="1">
- <tr><td>Accelerometer</td><td>Gyroscope</td></tr> <tr><td>
-<canvas id="left_accelerometer" width="512" height="240"></canvas></td><td><canvas id="right_accelerometer" width="512" height="240"></canvas></td></tr>
-    <tr><td><b>Magnetometer</b></td><td><b>Temperature</b></td></tr>
-    <tr><td><canvas id="left_gyro" width="512" height="240"></canvas></td><td><canvas id="right_gyro" width="512" height="240"></canvas></td></tr>
-    </table>
-    <canvas id="detection_canvas" width="1024" height="120" hidden="1"><br/>
-</body></html>
+     </table>
+ </div>
+
+ <div id="canvasDiv" hidden="1">
+     <table id="canvastable">
+         <tr>
+             <td><input type="button" id="btnSave" value="开始记录数据" onclick="onSave();"/></td>
+             <td><input type="button" id="btnStop" disabled value="停止记录数据" onclick="onStop();"/></td>
+         </tr>
+         <tr>
+             <td><b>Accelerometer</b></td>
+             <td><b>Gyroscope</b></td>
+         </tr>
+         <tr>
+             <td><canvas id="left_accelerometer" class="record_canvas" width="400" height="240"></canvas></td>
+             <td><canvas id="right_accelerometer" class="record_canvas" width="400" height="240"></canvas></td>
+         </tr>
+         <tr>
+             <td><b>Magnetometer</b></td>
+             <td><b>Temperature</b></td>
+         </tr>
+         <tr>
+             <td><canvas id="left_gyro" class="record_canvas" width="400" height="240"></canvas></td>
+             <td><canvas id="right_gyro" class="record_canvas" width="400" height="240"></canvas></td>
+         </tr>
+     </table>
+ </div>
+
+
+ <canvas id="detection_canvas" width="800" height="120" hidden="1"></canvas>
+
+</body>
+</html>
