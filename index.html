@@ -158,7 +158,7 @@ function onStop(){
   rowcnt = 0;
   nowTime = new Date();
   //dateInt = nowTime.getTime();
-  filename = inputage.value + '_' + inputsex.value + '_' + inputheight.value + '_' + inputweight.value + '_' +nowTime.getFullYear() + Appendzero(nowTime.getMonth()+1) + Appendzero(nowTime.getDate()) + nowTime.getHours() + nowTime.getMinutes() + nowTime.getSeconds()+'.csv';
+  filename = inputID.value + '_' + inputPosition.value + '_' + inputage.value + '_' + inputsex.value + '_' + inputheight.value + '_' + inputweight.value + '_' +nowTime.getFullYear() + Appendzero(nowTime.getMonth()+1) + Appendzero(nowTime.getDate()) + nowTime.getHours() + nowTime.getMinutes() + nowTime.getSeconds()+'.csv';
   exportToCsv(filename, csvdata);
   console.log('File is saved...');
   document.getElementById("canvasDiv").style.backgroundColor = '#fff'
@@ -323,7 +323,7 @@ function getSupportedProperties(characteristic) {//find the details of a charact
 </script>
 </head>
 <body onload="init();"  style="font-family:Arial">
- <h1>BLE Example - e-AR Sensor 数据采集系统</h1>
+ <h1>e-AR Sensor 数据采集系统</h1>
  本设备通过HTML的BLE模块连接e-AR传感器来进行数据采集 <br/>
 
  <div class="instructions">
@@ -340,9 +340,11 @@ function getSupportedProperties(characteristic) {//find the details of a charact
          <li>轻按e-AR传感器的背面（透明部位内侧贴有铜片的位置）开启传感器，此时按压部位附近应亮蓝光</li>
          <li>点击<strong>【开启蓝牙连接】</strong>按钮来寻找附近的e-AR传感器。开启后，在设备列表中找到名为【e-AR2016】的设备，选中并点击【配对】。</li>
          <li>本程序会与e-AR传感器建立蓝牙连接。一旦连接成功，信号将会被实时展示在屏幕上</li>
+         <li>在连接成功后，你需要填写患者的基本信息</li>
+         <li>填写完成后，可以点击【开始记录数据】来将数据记录下来，并在点按【停止记录数据】后将记录期间的数据保存在csv文件中</li>
          <li>如果你遇到连接问题，请尝试刷新页面，或按【F12】打开Chrome开发者工具获取更多信息</li>
          <li>若遇到不能解决的问题，请微信联系13346356328获取更多帮助</li>
-         <li> (skaegy) After start collecting data, the captured data can be saved as a '*.csv' file. </li>
+<!--         <li> (skaegy) After start collecting data, the captured data can be saved as a '*.csv' file. </li>-->
  </ul>
 </div>
 
@@ -359,27 +361,39 @@ function getSupportedProperties(characteristic) {//find the details of a charact
              <h2>基本信息录入【请在完成信息录入后开始记录数据】</h2>
          </tr>
          <tr>
+             <td>患者ID（四位数字）</td>
+             <td>
+                 <input type="text" id="inputID" value='0000' onfocus="if(value=='0000') {value=''}" onblur="if (value=='') {value='0000'}"/>
+             </td>
+         </tr>
+         <tr>
              <td>患者年龄</td>
              <td>
                  <input type="text" id="inputage" value='xx' onfocus="if(value=='xx') {value=''}" onblur="if (value=='') {value='xx'}"/>
              </td>
          </tr>
          <tr>
-             <td>患者性别</td>
+             <td>患者性别（M/F）</td>
              <td>
-                 <input type="text" id="inputsex" value='x' onfocus="if(value=='x') {value=''}" onblur="if (value=='') {value='x'}"/>
+                 <input type="text" id="inputsex" value='x' onfocus="if(value=='M/F') {value=''}" onblur="if (value=='') {value='M/F'}"/>
              </td>
          </tr>
          <tr>
-             <td>患者身高</td>
+             <td>患者身高（cm）</td>
              <td>
                  <input type="text" id="inputheight" value='xxx' onfocus="if(value=='xxx') {value=''}" onblur="if (value=='') {value='xxx'}"/>
              </td>
          </tr>
          <tr>
-             <td>患者体重</td>
+             <td>患者体重（kg）</td>
              <td>
                  <input type="text" id="inputweight" value='xxx' onfocus="if(value=='xxx') {value=''}" onblur="if (value=='') {value='xxx'}"/>
+             </td>
+         </tr>
+         <tr>
+             <td>佩戴方式（左右耳）（L/R）</td>
+             <td>
+                 <input type="text" id="inputPosition" value='L/R' onfocus="if(value=='L/R') {value=''}" onblur="if (value=='') {value='L/R'}"/>
              </td>
          </tr>
 
