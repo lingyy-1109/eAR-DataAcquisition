@@ -119,8 +119,7 @@ function handleIMUNotifications(event) {
   /////////////////////////////////////////
 }
 
-function handleTemperatureNotifications(event)
-{//read the temperature values and plot those out
+function handleTemperatureNotifications(event) {//read the temperature values and plot those out
  let value = event.target.value;
   var temp1=value.getInt16(1,true);
   var temp2=value.getInt16(3,true);
@@ -155,11 +154,15 @@ function onStop(){
   saveflag = 0;
   document.getElementById("btnStop").disabled = true;
   document.getElementById("btnSave").disabled = false;
-  rowcnt = 0;
+
   nowTime = new Date();
   //dateInt = nowTime.getTime();
   filename = inputID.value + '_' + inputPosition.value + '_' + inputage.value + '_' + inputsex.value + '_' + inputheight.value + '_' + inputweight.value + '_' +nowTime.getFullYear() + Appendzero(nowTime.getMonth()+1) + Appendzero(nowTime.getDate()) + nowTime.getHours() + nowTime.getMinutes() + nowTime.getSeconds()+'.csv';
   exportToCsv(filename, csvdata);
+  for(let i = 0;i<=rowcnt;i++){
+      csvdata.pop();
+  }
+  rowcnt = 0
   console.log('File is saved...');
   document.getElementById("canvasDiv").style.backgroundColor = '#fff'
 }
