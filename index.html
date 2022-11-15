@@ -157,7 +157,7 @@ function onStop(){
 
   nowTime = new Date();
   //dateInt = nowTime.getTime();
-  filename = inputID.value + '_' + inputPosition.value + '_' + inputage.value + '_' + inputsex.value + '_' + inputheight.value + '_' + inputweight.value + '_' +nowTime.getFullYear() + Appendzero(nowTime.getMonth()+1) + Appendzero(nowTime.getDate()) + nowTime.getHours() + nowTime.getMinutes() + nowTime.getSeconds()+'.csv';
+  filename = inputID.value + '_' + inputPosition.value + '_' + inputage.value + '_' + inputsex.value + '_' + inputheight.value + '_' + inputweight.value + '_' + inputIllSide.value + '_'+nowTime.getFullYear() + Appendzero(nowTime.getMonth()+1) + Appendzero(nowTime.getDate()) + nowTime.getHours() + nowTime.getMinutes() + nowTime.getSeconds()+'.csv';
   exportToCsv(filename, csvdata);
   for(let i = 0;i<=rowcnt;i++){
       csvdata.pop();
@@ -378,7 +378,7 @@ function getSupportedProperties(characteristic) {//find the details of a charact
          <tr>
              <td>患者性别（M/F）</td>
              <td>
-                 <input type="text" id="inputsex" value='x' onfocus="if(value=='M/F') {value=''}" onblur="if (value=='') {value='M/F'}"/>
+                 <input type="text" id="inputsex" value='MF' onfocus="if(value=='MF') {value=''}" onblur="if (value=='') {value='MF'}"/>
              </td>
          </tr>
          <tr>
@@ -396,7 +396,13 @@ function getSupportedProperties(characteristic) {//find the details of a charact
          <tr>
              <td>佩戴方式（左右耳）（L/R）</td>
              <td>
-                 <input type="text" id="inputPosition" value='L/R' onfocus="if(value=='L/R') {value=''}" onblur="if (value=='') {value='L/R'}"/>
+                 <input type="text" id="inputPosition" value='LR' onfocus="if(value=='LR') {value=''}" onblur="if (value=='') {value='LR'}"/>
+             </td>
+         </tr>
+         <tr>
+             <td>是否为偏瘫患侧（Y/N）</td>
+             <td>
+                 <input type="text" id="inputIllSide" value='YN' onfocus="if(value=='YN') {value=''}" onblur="if (value=='') {value='YN'}"/>
              </td>
          </tr>
 
